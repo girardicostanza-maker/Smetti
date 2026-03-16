@@ -404,9 +404,10 @@
   const MIN_LIMIT = 1;
 
   function getDefaultState() {
+    const today = getToday();
     return {
-      startDate: new Date().toISOString().split('T')[0],
-      today: new Date().toISOString().split('T')[0],
+      startDate: today,
+      today: today,
       smoked: 0
     };
   }
@@ -425,7 +426,11 @@
 
   // ── Computed ──
   function getToday() {
-    return new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   function daysBetween(a, b) {
@@ -574,8 +579,31 @@
 
   // Re-render when tab becomes visible (coming back to app)
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) render();
+    if (!document.hidden) {
+      const state = loadState();
+      const today = getToday();
+      if (state.today !== today) {
+        const toast = document.getElementById('toast');
+        toast.textContent = '🌙 Nuovo giorno, contatore azzerato!';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+      render();
+    }
   });
+
+  // Also check every 30 seconds in case app stays open
+  setInterval(() => {
+    const state = loadState();
+    const today = getToday();
+    if (state.today !== today) {
+      const toast = document.getElementById('toast');
+      toast.textContent = '🌙 Nuovo giorno, contatore azzerato!';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+      render();
+    }
+  }, 30000);
 </script>
 </body>
 </html>
