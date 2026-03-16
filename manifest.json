@@ -1,0 +1,17 @@
+{
+  "name": "Smetti - Contatore Sigarette",
+  "short_name": "Smetti",
+  "description": "Tieni traccia delle sigarette e riduci gradualmente",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f0f17",
+  "theme_color": "#0f0f17",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMGYwZjE3Ii8+PHRleHQgeD0iOTAiIHk9IjExMCIgZm9udC1zaXplPSI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+agDwvdGV4dD48L3N2Zz4=",
+      "sizes": "180x180",
+      "type": "image/svg+xml"
+    }
+  ]
+}
