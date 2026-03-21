@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Smetti">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMWExYTJlIi8+PHRleHQgeD0iOTAiIHk9IjEwNSIgZm9udC1zaXplPSI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+agDwvdGV4dD48L3N2Zz4=">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMGYwZjE3Ii8+PHRleHQgeD0iOTAiIHk9IjExMCIgZm9udC1zaXplPSI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+agDwvdGV4dD48L3N2Zz4=">
 <title>Smetti</title>
 <link rel="manifest" href="manifest.json">
 <style>
@@ -44,13 +44,10 @@
     position: relative;
   }
 
-  /* Ambient background */
   .ambient {
     position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
     background: radial-gradient(circle at 30% 20%, rgba(233,69,96,0.06) 0%, transparent 50%),
                 radial-gradient(circle at 70% 80%, rgba(46,204,113,0.04) 0%, transparent 50%);
     pointer-events: none;
@@ -63,15 +60,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
+    gap: 24px;
     width: 100%;
     max-width: 380px;
   }
 
-  /* Header */
-  .header {
-    text-align: center;
-  }
+  .header { text-align: center; }
 
   .header h1 {
     font-family: 'Outfit', sans-serif;
@@ -103,7 +97,6 @@
     letter-spacing: 0.3px;
   }
 
-  /* Main circle counter */
   .counter-ring {
     position: relative;
     width: 220px;
@@ -116,11 +109,7 @@
     transform: rotate(-90deg);
   }
 
-  .ring-bg {
-    fill: none;
-    stroke: var(--surface-light);
-    stroke-width: 6;
-  }
+  .ring-bg { fill: none; stroke: var(--surface-light); stroke-width: 6; }
 
   .ring-progress {
     fill: none;
@@ -131,20 +120,12 @@
     filter: drop-shadow(0 0 8px var(--green-glow));
   }
 
-  .ring-progress.warning {
-    stroke: var(--gold);
-    filter: drop-shadow(0 0 8px rgba(240,192,64,0.3));
-  }
-
-  .ring-progress.danger {
-    stroke: var(--accent);
-    filter: drop-shadow(0 0 8px var(--accent-glow));
-  }
+  .ring-progress.warning { stroke: var(--gold); filter: drop-shadow(0 0 8px rgba(240,192,64,0.3)); }
+  .ring-progress.danger { stroke: var(--accent); filter: drop-shadow(0 0 8px var(--accent-glow)); }
 
   .counter-inner {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     pointer-events: none;
@@ -155,12 +136,11 @@
     font-weight: 200;
     font-size: 80px;
     line-height: 1;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .remaining-number.pop {
-    animation: pop 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+  .remaining-number.negative { color: var(--accent); }
+
+  .remaining-number.pop { animation: pop 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
 
   @keyframes pop {
     0% { transform: scale(1); }
@@ -176,7 +156,6 @@
     margin-top: 2px;
   }
 
-  /* Cigarette dots */
   .cig-dots {
     display: flex;
     gap: 10px;
@@ -186,8 +165,7 @@
   }
 
   .cig-dot {
-    width: 14px;
-    height: 14px;
+    width: 14px; height: 14px;
     border-radius: 50%;
     background: var(--surface-light);
     border: 2px solid var(--text-dim);
@@ -195,20 +173,22 @@
     opacity: 0.4;
   }
 
-  .cig-dot.smoked {
+  .cig-dot.smoked { background: var(--accent); border-color: var(--accent); opacity: 1; box-shadow: 0 0 10px var(--accent-glow); }
+  .cig-dot.available { background: var(--green); border-color: var(--green); opacity: 0.6; }
+
+  .cig-dot.over-limit {
     background: var(--accent);
-    border-color: var(--accent);
+    border-color: #ff2040;
     opacity: 1;
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 14px rgba(255, 32, 64, 0.5);
+    animation: pulse-dot 1.5s infinite;
   }
 
-  .cig-dot.available {
-    background: var(--green);
-    border-color: var(--green);
-    opacity: 0.6;
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 10px rgba(255, 32, 64, 0.4); }
+    50% { box-shadow: 0 0 18px rgba(255, 32, 64, 0.7); }
   }
 
-  /* Smoke button */
   .smoke-btn {
     width: 100%;
     padding: 18px;
@@ -220,27 +200,20 @@
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
     background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
     color: var(--text);
     border: 1px solid rgba(255,255,255,0.06);
   }
 
-  .smoke-btn:active {
-    transform: scale(0.97);
+  .smoke-btn:active { transform: scale(0.97); }
+
+  .smoke-btn.over-limit-btn {
+    background: linear-gradient(135deg, #2a1520 0%, #3a1525 100%);
+    border-color: rgba(233, 69, 96, 0.3);
   }
 
-  .smoke-btn.disabled {
-    opacity: 0.35;
-    pointer-events: none;
-  }
+  .smoke-btn .btn-icon { margin-right: 8px; }
 
-  .smoke-btn .btn-icon {
-    margin-right: 8px;
-  }
-
-  /* Undo */
   .undo-btn {
     background: none;
     border: 1px solid var(--surface-light);
@@ -250,19 +223,11 @@
     padding: 10px 24px;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.25s;
     display: none;
   }
+  .undo-btn.visible { display: block; }
+  .undo-btn:active { background: var(--surface); }
 
-  .undo-btn.visible {
-    display: block;
-  }
-
-  .undo-btn:active {
-    background: var(--surface);
-  }
-
-  /* Stats footer */
   .stats {
     display: flex;
     gap: 2px;
@@ -273,17 +238,10 @@
     border: 1px solid rgba(255,255,255,0.04);
   }
 
-  .stat {
-    flex: 1;
-    padding: 14px 8px;
-    text-align: center;
-  }
+  .stat { flex: 1; padding: 14px 8px; text-align: center; }
 
-  .stat-value {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-  }
+  .stat-value { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; }
+  .stat-value.over { color: var(--accent); }
 
   .stat-label {
     font-size: 10px;
@@ -293,7 +251,6 @@
     margin-top: 2px;
   }
 
-  /* Zero state */
   .zero-msg {
     font-size: 13px;
     color: var(--accent);
@@ -303,17 +260,11 @@
     display: none;
     min-height: 20px;
   }
+  .zero-msg.visible { display: block; animation: fadeIn 0.5s; }
 
-  .zero-msg.visible {
-    display: block;
-    animation: fadeIn 0.5s;
-  }
-
-  /* Reset notification */
   .reset-toast {
     position: fixed;
-    top: 60px;
-    left: 50%;
+    top: 60px; left: 50%;
     transform: translateX(-50%) translateY(-100px);
     background: var(--surface);
     border: 1px solid var(--green);
@@ -325,31 +276,76 @@
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
   }
-
-  .reset-toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
+  .reset-toast.show { transform: translateX(-50%) translateY(0); }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Confetti placeholder */
-  .confetti-container {
+  /* Recap modal */
+  .modal-overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 99;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
   }
+  .modal-overlay.show { display: flex; animation: fadeIn 0.4s; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 32px 28px;
+    text-align: center;
+    max-width: 340px;
+    width: 100%;
+    border: 1px solid var(--surface-light);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .modal-emoji { font-size: 56px; margin-bottom: 16px; }
+
+  .modal-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 22px; margin-bottom: 8px; }
+  .modal-title.success { color: var(--green); }
+  .modal-title.fail { color: var(--accent); }
+
+  .modal-text { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin-bottom: 24px; }
+  .modal-text strong { color: var(--text); font-weight: 500; }
+
+  .modal-btn {
+    background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface) 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 32px;
+    border-radius: 14px;
+    cursor: pointer;
+  }
+  .modal-btn:active { transform: scale(0.96); }
 </style>
 </head>
 <body>
 
 <div class="ambient"></div>
-<div class="confetti-container" id="confetti"></div>
 <div class="reset-toast" id="toast"></div>
+
+<div class="modal-overlay" id="recapModal">
+  <div class="modal">
+    <div class="modal-emoji" id="recapEmoji"></div>
+    <div class="modal-title" id="recapTitle"></div>
+    <div class="modal-text" id="recapText"></div>
+    <button class="modal-btn" onclick="closeRecap()">Avanti tutta! 💪</button>
+  </div>
+</div>
 
 <div class="container">
   <div class="header">
@@ -358,23 +354,22 @@
     <div class="week-badge" id="weekBadge"></div>
   </div>
 
-  <div class="counter-ring" id="ring">
+  <div class="counter-ring">
     <svg viewBox="0 0 220 220">
       <circle class="ring-bg" cx="110" cy="110" r="95"></circle>
       <circle class="ring-progress" id="ringProgress" cx="110" cy="110" r="95"></circle>
     </svg>
     <div class="counter-inner">
       <div class="remaining-number" id="remainNum">6</div>
-      <div class="remaining-label">rimaste</div>
+      <div class="remaining-label" id="remainLabel">rimaste</div>
     </div>
   </div>
 
   <div class="cig-dots" id="dots"></div>
-
-  <div class="zero-msg" id="zeroMsg">Hai finito per oggi. Tieni duro! 💪</div>
+  <div class="zero-msg" id="zeroMsg"></div>
 
   <button class="smoke-btn" id="smokeBtn" onclick="smoke()">
-    <span class="btn-icon">🚬</span> Ho fumato una sigaretta
+    <span class="btn-icon">🚬</span> <span id="btnText">Ho fumato una sigaretta</span>
   </button>
 
   <button class="undo-btn" id="undoBtn" onclick="undo()">↩ Annulla ultima</button>
@@ -396,214 +391,184 @@
 </div>
 
 <script>
-  // ── State ──
   const STORAGE_KEY = 'smetti_data';
   const CIRCUMFERENCE = 2 * Math.PI * 95;
   const INITIAL_LIMIT = 6;
-  const REDUCTION_WEEKS = 2; // ogni 2 settimane scende di 1
+  const REDUCTION_WEEKS = 2;
   const MIN_LIMIT = 1;
+
+  function getToday() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  }
 
   function getDefaultState() {
     const today = getToday();
-    return {
-      startDate: today,
-      today: today,
-      smoked: 0
-    };
+    return { startDate: today, today: today, smoked: 0, yesterdaySmoked: null, yesterdayLimit: null, recapShown: true };
   }
 
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return getDefaultState();
-      return JSON.parse(raw);
+      const s = JSON.parse(raw);
+      if (s.yesterdaySmoked === undefined) { s.yesterdaySmoked = null; s.yesterdayLimit = null; s.recapShown = true; }
+      return s;
     } catch { return getDefaultState(); }
   }
 
-  function saveState(state) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
-
-  // ── Computed ──
-  function getToday() {
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, '0');
-    const d = String(now.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
+  function saveState(state) { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
   function daysBetween(a, b) {
-    const msA = new Date(a).getTime();
-    const msB = new Date(b).getTime();
-    return Math.floor((msB - msA) / 86400000);
+    return Math.floor((new Date(b+'T00:00:00').getTime() - new Date(a+'T00:00:00').getTime()) / 86400000);
   }
 
   function getCurrentLimit(startDate) {
     const days = Math.max(0, daysBetween(startDate, getToday()));
-    const weeks = Math.floor(days / 7);
-    const reductions = Math.floor(weeks / REDUCTION_WEEKS);
-    return Math.max(MIN_LIMIT, INITIAL_LIMIT - reductions);
+    return Math.max(MIN_LIMIT, INITIAL_LIMIT - Math.floor(Math.floor(days / 7) / REDUCTION_WEEKS));
   }
 
-  function getWeekNumber(startDate) {
-    const days = Math.max(0, daysBetween(startDate, getToday()));
-    return Math.floor(days / 7) + 1;
+  function getWeekNumber(startDate) { return Math.floor(Math.max(0, daysBetween(startDate, getToday())) / 7) + 1; }
+  function getTotalDays(startDate) { return Math.max(0, daysBetween(startDate, getToday())); }
+
+  // ── Recap messages ──
+  const SUCCESS_MSGS = [
+    { emoji: '🏆', title: 'Grandissimo!', text: 'Ieri sei rimasto nel limite: <strong>{s}/{l} sigarette</strong>. Stai facendo un lavoro incredibile!' },
+    { emoji: '⭐', title: 'Fantastico!', text: 'Ieri solo <strong>{s} su {l}</strong>. Ogni giorno così è una vittoria!' },
+    { emoji: '🎉', title: 'Bravo!', text: '<strong>{s}/{l}</strong> ieri. Stai riprendendo il controllo, un giorno alla volta!' },
+    { emoji: '💚', title: 'Perfetto!', text: 'Ieri <strong>{s} su {l}</strong>. Il tuo corpo ti ringrazia già!' },
+    { emoji: '🔥', title: 'On fire!', text: 'Solo <strong>{s} su {l}</strong> ieri. Che forza!' },
+  ];
+
+  const FAIL_MSGS = [
+    { emoji: '💛', title: 'Non mollare', text: 'Ieri hai fumato <strong>{s} sigarette su {l}</strong>. Non è stato il giorno migliore, ma oggi si riparte!' },
+    { emoji: '🫂', title: 'Succede', text: '<strong>{s}/{l}</strong> ieri — hai sforato di {o}. Non sentirti in colpa, oggi è un nuovo inizio!' },
+    { emoji: '💪', title: 'Rialzati', text: 'Ieri <strong>{s} su {l}</strong>. Una giornata difficile non cancella i progressi. Oggi puoi fare meglio!' },
+  ];
+
+  function showRecap(smoked, limit) {
+    const ok = smoked <= limit;
+    const pool = ok ? SUCCESS_MSGS : FAIL_MSGS;
+    const msg = pool[Math.floor(Math.random() * pool.length)];
+    document.getElementById('recapEmoji').textContent = msg.emoji;
+    const t = document.getElementById('recapTitle');
+    t.textContent = msg.title;
+    t.className = 'modal-title ' + (ok ? 'success' : 'fail');
+    document.getElementById('recapText').innerHTML = msg.text.replace('{s}', smoked).replace('{l}', limit).replace('{o}', smoked - limit);
+    document.getElementById('recapModal').classList.add('show');
   }
 
-  function getTotalDays(startDate) {
-    return Math.max(0, daysBetween(startDate, getToday()));
+  function closeRecap() {
+    document.getElementById('recapModal').classList.remove('show');
+    const s = loadState(); s.recapShown = true; saveState(s);
   }
 
   // ── Render ──
   function render() {
     let state = loadState();
-
-    // Auto-reset at midnight
     const today = getToday();
+
     if (state.today !== today) {
+      state.yesterdaySmoked = state.smoked;
+      state.yesterdayLimit = getCurrentLimit(state.startDate);
+      state.recapShown = false;
       state.today = today;
       state.smoked = 0;
       saveState(state);
     }
 
+    if (!state.recapShown && state.yesterdaySmoked !== null) {
+      showRecap(state.yesterdaySmoked, state.yesterdayLimit);
+    }
+
     const limit = getCurrentLimit(state.startDate);
-    const remaining = Math.max(0, limit - state.smoked);
-    const fraction = limit > 0 ? remaining / limit : 0;
+    const remaining = limit - state.smoked;
+    const fraction = limit > 0 ? Math.max(0, remaining) / limit : 0;
+    const isOver = remaining < 0;
 
     // Ring
     const progress = document.getElementById('ringProgress');
-    const offset = CIRCUMFERENCE * (1 - fraction);
     progress.style.strokeDasharray = CIRCUMFERENCE;
-    progress.style.strokeDashoffset = offset;
-
+    progress.style.strokeDashoffset = CIRCUMFERENCE * (1 - fraction);
     progress.classList.remove('warning', 'danger');
-    if (fraction <= 0) progress.classList.add('danger');
+    if (isOver || remaining === 0) progress.classList.add('danger');
     else if (fraction <= 0.34) progress.classList.add('warning');
 
     // Number
     const numEl = document.getElementById('remainNum');
     numEl.textContent = remaining;
-    numEl.classList.remove('pop');
-    void numEl.offsetWidth;
-    numEl.classList.add('pop');
+    numEl.classList.toggle('negative', isOver);
+    numEl.classList.remove('pop'); void numEl.offsetWidth; numEl.classList.add('pop');
+
+    // Label
+    document.getElementById('remainLabel').textContent = isOver ? 'oltre il limite' : 'rimaste';
 
     // Dots
     const dotsEl = document.getElementById('dots');
     dotsEl.innerHTML = '';
-    for (let i = 0; i < limit; i++) {
+    const total = Math.max(limit, state.smoked);
+    for (let i = 0; i < total; i++) {
       const dot = document.createElement('div');
       dot.className = 'cig-dot';
-      if (i < state.smoked) dot.classList.add('smoked');
+      if (i < state.smoked && i < limit) dot.classList.add('smoked');
+      else if (i >= limit && i < state.smoked) dot.classList.add('over-limit');
       else dot.classList.add('available');
       dotsEl.appendChild(dot);
     }
 
     // Button
     const btn = document.getElementById('smokeBtn');
-    if (remaining <= 0) {
-      btn.classList.add('disabled');
+    const btnText = document.getElementById('btnText');
+    btn.classList.toggle('over-limit-btn', remaining <= 0);
+    btnText.textContent = remaining <= 0 ? "Ho sforato... un'altra sigaretta" : 'Ho fumato una sigaretta';
+
+    // Message
+    const zeroMsg = document.getElementById('zeroMsg');
+    if (isOver) {
+      const ov = Math.abs(remaining);
+      zeroMsg.textContent = `Hai sforato di ${ov} sigaret${ov === 1 ? 'ta' : 'te'}. Fermati qui! 🛑`;
+      zeroMsg.classList.add('visible');
+    } else if (remaining === 0) {
+      zeroMsg.textContent = 'Hai finito per oggi. Tieni duro! 💪';
+      zeroMsg.classList.add('visible');
     } else {
-      btn.classList.remove('disabled');
+      zeroMsg.classList.remove('visible');
     }
 
-    // Zero message
-    const zeroMsg = document.getElementById('zeroMsg');
-    if (remaining <= 0) zeroMsg.classList.add('visible');
-    else zeroMsg.classList.remove('visible');
-
     // Undo
-    const undoBtn = document.getElementById('undoBtn');
-    if (state.smoked > 0) undoBtn.classList.add('visible');
-    else undoBtn.classList.remove('visible');
+    document.getElementById('undoBtn').classList.toggle('visible', state.smoked > 0);
 
     // Stats
     document.getElementById('statLimit').textContent = limit;
-    document.getElementById('statSmoked').textContent = state.smoked;
+    const smokedEl = document.getElementById('statSmoked');
+    smokedEl.textContent = state.smoked;
+    smokedEl.classList.toggle('over', state.smoked > limit);
     document.getElementById('statDays').textContent = getTotalDays(state.startDate);
 
-    // Week badge
-    const week = getWeekNumber(state.startDate);
-    const badge = document.getElementById('weekBadge');
-    badge.textContent = `⭐ Settimana ${week} · Limite: ${limit}/giorno`;
+    document.getElementById('weekBadge').textContent = `⭐ Settimana ${getWeekNumber(state.startDate)} · Limite: ${limit}/giorno`;
   }
 
-  // ── Actions ──
   function smoke() {
-    const state = loadState();
-    const limit = getCurrentLimit(state.startDate);
-    if (state.smoked >= limit) return;
-
-    state.smoked++;
-    saveState(state);
-    render();
-
-    // Haptic feedback
+    const s = loadState(); s.smoked++; saveState(s); render();
     if (navigator.vibrate) navigator.vibrate(30);
   }
 
   function undo() {
-    const state = loadState();
-    if (state.smoked <= 0) return;
-    state.smoked--;
-    saveState(state);
-    render();
+    const s = loadState(); if (s.smoked <= 0) return; s.smoked--; saveState(s); render();
   }
 
-  // ── Midnight check ──
   function scheduleMidnightCheck() {
-    const now = new Date();
-    const midnight = new Date(now);
-    midnight.setHours(24, 0, 0, 0);
-    const ms = midnight - now;
-
-    setTimeout(() => {
-      const toast = document.getElementById('toast');
-      toast.textContent = '🌙 Nuovo giorno, contatore azzerato!';
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-      render();
-      scheduleMidnightCheck();
-    }, ms);
+    const now = new Date(), mid = new Date(now);
+    mid.setHours(24,0,0,0);
+    setTimeout(() => { render(); scheduleMidnightCheck(); }, mid - now);
   }
 
-  // ── Init ──
-  const state = loadState();
-  if (!state.startDate) {
-    const s = getDefaultState();
-    saveState(s);
-  }
-
+  // Init
+  if (!loadState().startDate) saveState(getDefaultState());
   render();
   scheduleMidnightCheck();
-
-  // Re-render when tab becomes visible (coming back to app)
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      const state = loadState();
-      const today = getToday();
-      if (state.today !== today) {
-        const toast = document.getElementById('toast');
-        toast.textContent = '🌙 Nuovo giorno, contatore azzerato!';
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-      }
-      render();
-    }
-  });
-
-  // Also check every 30 seconds in case app stays open
-  setInterval(() => {
-    const state = loadState();
-    const today = getToday();
-    if (state.today !== today) {
-      const toast = document.getElementById('toast');
-      toast.textContent = '🌙 Nuovo giorno, contatore azzerato!';
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-      render();
-    }
-  }, 30000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
+  setInterval(() => { if (loadState().today !== getToday()) render(); }, 30000);
 </script>
 </body>
 </html>
