@@ -29,20 +29,37 @@
 
   html, body {
     height: 100%;
-    overflow: hidden;
     background: var(--bg);
     color: var(--text);
     font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
   }
 
-  body {
+  /* ── Pages ── */
+  .page {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  #mainPage {
     justify-content: center;
     padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom);
-    position: relative;
+    z-index: 1;
   }
+
+  #historyPage {
+    transform: translateX(100%);
+    z-index: 2;
+    padding: 0;
+  }
+
+  #historyPage.show { transform: translateX(0); }
 
   .ambient {
     position: fixed;
@@ -60,7 +77,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 22px;
     width: 100%;
     max-width: 380px;
   }
@@ -77,12 +94,7 @@
     -webkit-text-fill-color: transparent;
   }
 
-  .header .subtitle {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-top: 4px;
-    font-weight: 300;
-  }
+  .header .subtitle { font-size: 13px; color: var(--text-dim); margin-top: 4px; font-weight: 300; }
 
   .week-badge {
     display: inline-block;
@@ -97,240 +109,232 @@
     letter-spacing: 0.3px;
   }
 
-  .counter-ring {
-    position: relative;
-    width: 220px;
-    height: 220px;
-  }
-
-  .counter-ring svg {
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-  }
-
+  .counter-ring { position: relative; width: 200px; height: 200px; }
+  .counter-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
   .ring-bg { fill: none; stroke: var(--surface-light); stroke-width: 6; }
 
   .ring-progress {
-    fill: none;
-    stroke: var(--green);
-    stroke-width: 6;
-    stroke-linecap: round;
+    fill: none; stroke: var(--green); stroke-width: 6; stroke-linecap: round;
     transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s;
     filter: drop-shadow(0 0 8px var(--green-glow));
   }
-
   .ring-progress.warning { stroke: var(--gold); filter: drop-shadow(0 0 8px rgba(240,192,64,0.3)); }
   .ring-progress.danger { stroke: var(--accent); filter: drop-shadow(0 0 8px var(--accent-glow)); }
 
   .counter-inner {
-    position: absolute;
-    top: 50%; left: 50%;
+    position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: none;
+    text-align: center; pointer-events: none;
   }
 
-  .remaining-number {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 200;
-    font-size: 80px;
-    line-height: 1;
-  }
-
+  .remaining-number { font-family: 'Outfit', sans-serif; font-weight: 200; font-size: 72px; line-height: 1; }
   .remaining-number.negative { color: var(--accent); }
-
   .remaining-number.pop { animation: pop 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
 
-  @keyframes pop {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.15); }
-    100% { transform: scale(1); }
-  }
+  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
-  .remaining-label {
-    font-size: 12px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 2px;
-  }
+  .remaining-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-top: 2px; }
 
-  .cig-dots {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    min-height: 28px;
-  }
+  .cig-dots { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; min-height: 24px; }
 
   .cig-dot {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: var(--surface-light);
-    border: 2px solid var(--text-dim);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.4;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--surface-light); border: 2px solid var(--text-dim);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.4;
   }
-
   .cig-dot.smoked { background: var(--accent); border-color: var(--accent); opacity: 1; box-shadow: 0 0 10px var(--accent-glow); }
   .cig-dot.available { background: var(--green); border-color: var(--green); opacity: 0.6; }
-
   .cig-dot.over-limit {
-    background: var(--accent);
-    border-color: #ff2040;
-    opacity: 1;
-    box-shadow: 0 0 14px rgba(255, 32, 64, 0.5);
-    animation: pulse-dot 1.5s infinite;
+    background: var(--accent); border-color: #ff2040; opacity: 1;
+    box-shadow: 0 0 14px rgba(255,32,64,0.5); animation: pulse-dot 1.5s infinite;
   }
 
   @keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 10px rgba(255, 32, 64, 0.4); }
-    50% { box-shadow: 0 0 18px rgba(255, 32, 64, 0.7); }
+    0%, 100% { box-shadow: 0 0 10px rgba(255,32,64,0.4); }
+    50% { box-shadow: 0 0 18px rgba(255,32,64,0.7); }
   }
 
   .smoke-btn {
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: 16px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s;
+    width: 100%; padding: 16px; border: none; border-radius: 16px;
+    font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;
+    letter-spacing: 1px; cursor: pointer; transition: all 0.3s;
     background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,0.06);
+    color: var(--text); border: 1px solid rgba(255,255,255,0.06);
   }
-
   .smoke-btn:active { transform: scale(0.97); }
-
-  .smoke-btn.over-limit-btn {
-    background: linear-gradient(135deg, #2a1520 0%, #3a1525 100%);
-    border-color: rgba(233, 69, 96, 0.3);
-  }
-
+  .smoke-btn.over-limit-btn { background: linear-gradient(135deg, #2a1520 0%, #3a1525 100%); border-color: rgba(233,69,96,0.3); }
   .smoke-btn .btn-icon { margin-right: 8px; }
 
+  .btn-row { display: flex; gap: 10px; width: 100%; }
+
   .undo-btn {
-    background: none;
-    border: 1px solid var(--surface-light);
-    color: var(--text-dim);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    padding: 10px 24px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: none;
+    background: none; border: 1px solid var(--surface-light); color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 10px 20px;
+    border-radius: 12px; cursor: pointer; display: none; flex: 1;
   }
   .undo-btn.visible { display: block; }
   .undo-btn:active { background: var(--surface); }
 
+  .history-btn {
+    background: none; border: 1px solid var(--surface-light); color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 10px 20px;
+    border-radius: 12px; cursor: pointer; flex: 1;
+  }
+  .history-btn:active { background: var(--surface); }
+
   .stats {
-    display: flex;
-    gap: 2px;
-    width: 100%;
-    background: var(--surface);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.04);
+    display: flex; gap: 2px; width: 100%;
+    background: var(--surface); border-radius: 16px;
+    overflow: hidden; border: 1px solid rgba(255,255,255,0.04);
   }
-
-  .stat { flex: 1; padding: 14px 8px; text-align: center; }
-
-  .stat-value { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; }
+  .stat { flex: 1; padding: 12px 8px; text-align: center; }
+  .stat-value { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 18px; }
   .stat-value.over { color: var(--accent); }
-
-  .stat-label {
-    font-size: 10px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-top: 2px;
-  }
+  .stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
   .zero-msg {
-    font-size: 13px;
-    color: var(--accent);
-    font-style: italic;
-    font-weight: 300;
-    text-align: center;
-    display: none;
-    min-height: 20px;
+    font-size: 13px; color: var(--accent); font-style: italic; font-weight: 300;
+    text-align: center; display: none; min-height: 18px;
   }
   .zero-msg.visible { display: block; animation: fadeIn 0.5s; }
 
   .reset-toast {
-    position: fixed;
-    top: 60px; left: 50%;
+    position: fixed; top: 60px; left: 50%;
     transform: translateX(-50%) translateY(-100px);
-    background: var(--surface);
-    border: 1px solid var(--green);
-    border-radius: 14px;
-    padding: 12px 24px;
-    font-size: 13px;
-    color: var(--green);
-    z-index: 100;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
+    background: var(--surface); border: 1px solid var(--green);
+    border-radius: 14px; padding: 12px 24px; font-size: 13px;
+    color: var(--green); z-index: 100;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap;
   }
   .reset-toast.show { transform: translateX(-50%) translateY(0); }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
   /* Recap modal */
   .modal-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px;
   }
   .modal-overlay.show { display: flex; animation: fadeIn 0.4s; }
 
   .modal {
-    background: var(--surface);
-    border-radius: 24px;
-    padding: 32px 28px;
-    text-align: center;
-    max-width: 340px;
-    width: 100%;
-    border: 1px solid var(--surface-light);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    background: var(--surface); border-radius: 24px; padding: 32px 28px;
+    text-align: center; max-width: 340px; width: 100%;
+    border: 1px solid var(--surface-light); box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   }
-
   .modal-emoji { font-size: 56px; margin-bottom: 16px; }
-
   .modal-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 22px; margin-bottom: 8px; }
   .modal-title.success { color: var(--green); }
   .modal-title.fail { color: var(--accent); }
-
   .modal-text { font-size: 14px; color: var(--text-dim); line-height: 1.6; margin-bottom: 24px; }
   .modal-text strong { color: var(--text); font-weight: 500; }
-
   .modal-btn {
     background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface) 100%);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: var(--text);
-    font-family: 'Outfit', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    padding: 14px 32px;
-    border-radius: 14px;
-    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1); color: var(--text);
+    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px;
+    padding: 14px 32px; border-radius: 14px; cursor: pointer;
   }
   .modal-btn:active { transform: scale(0.96); }
+
+  /* ── History Page ── */
+  .hist-header {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; padding: 16px 20px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    background: var(--surface); border-bottom: 1px solid var(--surface-light);
+    flex-shrink: 0;
+  }
+  .hist-back {
+    background: none; border: none; color: var(--text); font-size: 16px;
+    cursor: pointer; padding: 8px; display: flex; align-items: center; gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .hist-back:active { opacity: 0.6; }
+  .hist-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 18px; }
+  .hist-spacer { width: 60px; }
+
+  .hist-scroll {
+    flex: 1; overflow-y: auto; width: 100%; padding: 16px 20px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hist-day {
+    background: var(--surface); border-radius: 16px;
+    border: 1px solid var(--surface-light); margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .hist-day-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 16px; cursor: pointer;
+  }
+  .hist-day-header:active { background: var(--surface-light); }
+
+  .hist-day-date { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px; }
+  .hist-day-date .weekday { color: var(--text-dim); font-weight: 400; font-size: 13px; margin-left: 6px; }
+
+  .hist-day-badge {
+    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px;
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .hist-day-badge.ok { background: rgba(46,204,113,0.15); color: var(--green); }
+  .hist-day-badge.over { background: rgba(233,69,96,0.15); color: var(--accent); }
+
+  .hist-day-times {
+    padding: 0 16px 14px; display: none;
+  }
+  .hist-day-times.open { display: block; }
+
+  .hist-time-entry {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .hist-time-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .hist-time-dot.in-limit { background: var(--gold); }
+  .hist-time-dot.over { background: var(--accent); }
+
+  .hist-time-hour {
+    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px;
+    min-width: 50px;
+  }
+
+  .hist-time-num {
+    font-size: 12px; color: var(--text-dim);
+  }
+
+  .hist-empty {
+    text-align: center; color: var(--text-dim); padding: 60px 20px;
+    font-style: italic; font-size: 14px;
+  }
+
+  /* Today's times on main page */
+  .today-times {
+    width: 100%; display: none;
+  }
+  .today-times.visible { display: block; }
+
+  .today-times-toggle {
+    background: none; border: none; color: var(--text-dim); font-size: 12px;
+    cursor: pointer; padding: 4px 0; font-family: 'DM Sans', sans-serif;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+
+  .today-times-list {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+  }
+
+  .today-time-chip {
+    background: var(--surface); border: 1px solid var(--surface-light);
+    border-radius: 8px; padding: 4px 10px; font-size: 12px;
+    font-family: 'Outfit', sans-serif; font-weight: 500;
+    color: var(--text-dim);
+  }
+  .today-time-chip.over { color: var(--accent); border-color: rgba(233,69,96,0.3); }
 </style>
 </head>
 <body>
@@ -347,64 +351,103 @@
   </div>
 </div>
 
-<div class="container">
-  <div class="header">
-    <h1>🚭 Smetti</h1>
-    <div class="subtitle">Un giorno alla volta</div>
-    <div class="week-badge" id="weekBadge"></div>
-  </div>
-
-  <div class="counter-ring">
-    <svg viewBox="0 0 220 220">
-      <circle class="ring-bg" cx="110" cy="110" r="95"></circle>
-      <circle class="ring-progress" id="ringProgress" cx="110" cy="110" r="95"></circle>
-    </svg>
-    <div class="counter-inner">
-      <div class="remaining-number" id="remainNum">6</div>
-      <div class="remaining-label" id="remainLabel">rimaste</div>
+<!-- Main Page -->
+<div class="page" id="mainPage">
+  <div class="container">
+    <div class="header">
+      <h1>🚭 Smetti</h1>
+      <div class="subtitle">Un giorno alla volta</div>
+      <div class="week-badge" id="weekBadge"></div>
     </div>
-  </div>
 
-  <div class="cig-dots" id="dots"></div>
-  <div class="zero-msg" id="zeroMsg"></div>
-
-  <button class="smoke-btn" id="smokeBtn" onclick="smoke()">
-    <span class="btn-icon">🚬</span> <span id="btnText">Ho fumato una sigaretta</span>
-  </button>
-
-  <button class="undo-btn" id="undoBtn" onclick="undo()">↩ Annulla ultima</button>
-
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-value" id="statLimit">6</div>
-      <div class="stat-label">Limite</div>
+    <div class="counter-ring">
+      <svg viewBox="0 0 200 200">
+        <circle class="ring-bg" cx="100" cy="100" r="85"></circle>
+        <circle class="ring-progress" id="ringProgress" cx="100" cy="100" r="85"></circle>
+      </svg>
+      <div class="counter-inner">
+        <div class="remaining-number" id="remainNum">6</div>
+        <div class="remaining-label" id="remainLabel">rimaste</div>
+      </div>
     </div>
-    <div class="stat">
-      <div class="stat-value" id="statSmoked">0</div>
-      <div class="stat-label">Fumate</div>
+
+    <div class="cig-dots" id="dots"></div>
+    <div class="zero-msg" id="zeroMsg"></div>
+
+    <div class="today-times" id="todayTimes">
+      <div class="today-times-list" id="todayTimesList"></div>
     </div>
-    <div class="stat">
-      <div class="stat-value" id="statDays">0</div>
-      <div class="stat-label">Giorni</div>
+
+    <button class="smoke-btn" id="smokeBtn" onclick="smoke()">
+      <span class="btn-icon">🚬</span> <span id="btnText">Ho fumato una sigaretta</span>
+    </button>
+
+    <div class="btn-row">
+      <button class="undo-btn" id="undoBtn" onclick="undo()">↩ Annulla</button>
+      <button class="history-btn" onclick="openHistory()">📊 Storico</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value" id="statLimit">6</div>
+        <div class="stat-label">Limite</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="statSmoked">0</div>
+        <div class="stat-label">Fumate</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="statDays">0</div>
+        <div class="stat-label">Giorni</div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- History Page -->
+<div class="page" id="historyPage">
+  <div class="hist-header">
+    <button class="hist-back" onclick="closeHistory()">← Indietro</button>
+    <div class="hist-title">📊 Storico</div>
+    <div class="hist-spacer"></div>
+  </div>
+  <div class="hist-scroll" id="histScroll"></div>
+</div>
+
 <script>
   const STORAGE_KEY = 'smetti_data';
-  const CIRCUMFERENCE = 2 * Math.PI * 95;
+  const HISTORY_KEY = 'smetti_history';
+  const CIRCUMFERENCE = 2 * Math.PI * 85;
   const INITIAL_LIMIT = 6;
   const REDUCTION_WEEKS = 2;
   const MIN_LIMIT = 1;
 
+  const WEEKDAYS = ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+  const MONTHS = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+
   function getToday() {
-    const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const n = new Date();
+    return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+  }
+
+  function getNow() {
+    const n = new Date();
+    return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  }
+
+  function getWeekday(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return WEEKDAYS[d.getDay()];
   }
 
   function getDefaultState() {
     const today = getToday();
-    return { startDate: today, today: today, smoked: 0, yesterdaySmoked: null, yesterdayLimit: null, recapShown: true };
+    return { startDate: today, today: today, smoked: 0, todayTimes: [], yesterdaySmoked: null, yesterdayLimit: null, recapShown: true };
   }
 
   function loadState() {
@@ -413,37 +456,51 @@
       if (!raw) return getDefaultState();
       const s = JSON.parse(raw);
       if (s.yesterdaySmoked === undefined) { s.yesterdaySmoked = null; s.yesterdayLimit = null; s.recapShown = true; }
+      if (!s.todayTimes) s.todayTimes = [];
       return s;
     } catch { return getDefaultState(); }
   }
 
-  function saveState(state) { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+
+  // History: { "2026-03-21": { smoked: 4, limit: 6, times: ["08:30","10:15","14:00","19:45"] }, ... }
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '{}'); } catch { return {}; }
+  }
+  function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
+
+  function archiveDay(state) {
+    const h = loadHistory();
+    const limit = getLimitForDate(state.startDate, state.today);
+    h[state.today] = { smoked: state.smoked, limit: limit, times: state.todayTimes || [] };
+    saveHistory(h);
+  }
 
   function daysBetween(a, b) {
     return Math.floor((new Date(b+'T00:00:00').getTime() - new Date(a+'T00:00:00').getTime()) / 86400000);
   }
 
-  function getCurrentLimit(startDate) {
-    const days = Math.max(0, daysBetween(startDate, getToday()));
+  function getLimitForDate(startDate, date) {
+    const days = Math.max(0, daysBetween(startDate, date));
     return Math.max(MIN_LIMIT, INITIAL_LIMIT - Math.floor(Math.floor(days / 7) / REDUCTION_WEEKS));
   }
 
+  function getCurrentLimit(startDate) { return getLimitForDate(startDate, getToday()); }
   function getWeekNumber(startDate) { return Math.floor(Math.max(0, daysBetween(startDate, getToday())) / 7) + 1; }
   function getTotalDays(startDate) { return Math.max(0, daysBetween(startDate, getToday())); }
 
-  // ── Recap messages ──
+  // ── Recap ──
   const SUCCESS_MSGS = [
     { emoji: '🏆', title: 'Grandissimo!', text: 'Ieri sei rimasto nel limite: <strong>{s}/{l} sigarette</strong>. Stai facendo un lavoro incredibile!' },
     { emoji: '⭐', title: 'Fantastico!', text: 'Ieri solo <strong>{s} su {l}</strong>. Ogni giorno così è una vittoria!' },
-    { emoji: '🎉', title: 'Bravo!', text: '<strong>{s}/{l}</strong> ieri. Stai riprendendo il controllo, un giorno alla volta!' },
-    { emoji: '💚', title: 'Perfetto!', text: 'Ieri <strong>{s} su {l}</strong>. Il tuo corpo ti ringrazia già!' },
+    { emoji: '🎉', title: 'Bravo!', text: '<strong>{s}/{l}</strong> ieri. Stai riprendendo il controllo!' },
+    { emoji: '💚', title: 'Perfetto!', text: 'Ieri <strong>{s} su {l}</strong>. Il tuo corpo ti ringrazia!' },
     { emoji: '🔥', title: 'On fire!', text: 'Solo <strong>{s} su {l}</strong> ieri. Che forza!' },
   ];
-
   const FAIL_MSGS = [
-    { emoji: '💛', title: 'Non mollare', text: 'Ieri hai fumato <strong>{s} sigarette su {l}</strong>. Non è stato il giorno migliore, ma oggi si riparte!' },
-    { emoji: '🫂', title: 'Succede', text: '<strong>{s}/{l}</strong> ieri — hai sforato di {o}. Non sentirti in colpa, oggi è un nuovo inizio!' },
-    { emoji: '💪', title: 'Rialzati', text: 'Ieri <strong>{s} su {l}</strong>. Una giornata difficile non cancella i progressi. Oggi puoi fare meglio!' },
+    { emoji: '💛', title: 'Non mollare', text: 'Ieri hai fumato <strong>{s} su {l}</strong>. Oggi si riparte!' },
+    { emoji: '🫂', title: 'Succede', text: '<strong>{s}/{l}</strong> ieri — hai sforato di {o}. Oggi è un nuovo inizio!' },
+    { emoji: '💪', title: 'Rialzati', text: 'Ieri <strong>{s} su {l}</strong>. Oggi puoi fare meglio!' },
   ];
 
   function showRecap(smoked, limit) {
@@ -452,8 +509,7 @@
     const msg = pool[Math.floor(Math.random() * pool.length)];
     document.getElementById('recapEmoji').textContent = msg.emoji;
     const t = document.getElementById('recapTitle');
-    t.textContent = msg.title;
-    t.className = 'modal-title ' + (ok ? 'success' : 'fail');
+    t.textContent = msg.title; t.className = 'modal-title ' + (ok ? 'success' : 'fail');
     document.getElementById('recapText').innerHTML = msg.text.replace('{s}', smoked).replace('{l}', limit).replace('{o}', smoked - limit);
     document.getElementById('recapModal').classList.add('show');
   }
@@ -469,11 +525,14 @@
     const today = getToday();
 
     if (state.today !== today) {
+      // Archive yesterday
+      archiveDay(state);
       state.yesterdaySmoked = state.smoked;
       state.yesterdayLimit = getCurrentLimit(state.startDate);
       state.recapShown = false;
       state.today = today;
       state.smoked = 0;
+      state.todayTimes = [];
       saveState(state);
     }
 
@@ -486,7 +545,6 @@
     const fraction = limit > 0 ? Math.max(0, remaining) / limit : 0;
     const isOver = remaining < 0;
 
-    // Ring
     const progress = document.getElementById('ringProgress');
     progress.style.strokeDasharray = CIRCUMFERENCE;
     progress.style.strokeDashoffset = CIRCUMFERENCE * (1 - fraction);
@@ -494,16 +552,13 @@
     if (isOver || remaining === 0) progress.classList.add('danger');
     else if (fraction <= 0.34) progress.classList.add('warning');
 
-    // Number
     const numEl = document.getElementById('remainNum');
     numEl.textContent = remaining;
     numEl.classList.toggle('negative', isOver);
     numEl.classList.remove('pop'); void numEl.offsetWidth; numEl.classList.add('pop');
 
-    // Label
     document.getElementById('remainLabel').textContent = isOver ? 'oltre il limite' : 'rimaste';
 
-    // Dots
     const dotsEl = document.getElementById('dots');
     dotsEl.innerHTML = '';
     const total = Math.max(limit, state.smoked);
@@ -516,17 +571,15 @@
       dotsEl.appendChild(dot);
     }
 
-    // Button
     const btn = document.getElementById('smokeBtn');
     const btnText = document.getElementById('btnText');
     btn.classList.toggle('over-limit-btn', remaining <= 0);
-    btnText.textContent = remaining <= 0 ? "Ho sforato... un'altra sigaretta" : 'Ho fumato una sigaretta';
+    btnText.textContent = remaining <= 0 ? "Ho sforato... un'altra" : 'Ho fumato una sigaretta';
 
-    // Message
     const zeroMsg = document.getElementById('zeroMsg');
     if (isOver) {
       const ov = Math.abs(remaining);
-      zeroMsg.textContent = `Hai sforato di ${ov} sigaret${ov === 1 ? 'ta' : 'te'}. Fermati qui! 🛑`;
+      zeroMsg.textContent = `Sforato di ${ov}. Fermati qui! 🛑`;
       zeroMsg.classList.add('visible');
     } else if (remaining === 0) {
       zeroMsg.textContent = 'Hai finito per oggi. Tieni duro! 💪';
@@ -535,10 +588,8 @@
       zeroMsg.classList.remove('visible');
     }
 
-    // Undo
     document.getElementById('undoBtn').classList.toggle('visible', state.smoked > 0);
 
-    // Stats
     document.getElementById('statLimit').textContent = limit;
     const smokedEl = document.getElementById('statSmoked');
     smokedEl.textContent = state.smoked;
@@ -546,15 +597,132 @@
     document.getElementById('statDays').textContent = getTotalDays(state.startDate);
 
     document.getElementById('weekBadge').textContent = `⭐ Settimana ${getWeekNumber(state.startDate)} · Limite: ${limit}/giorno`;
+
+    // Today's times
+    const todayTimesEl = document.getElementById('todayTimes');
+    const todayListEl = document.getElementById('todayTimesList');
+    if (state.todayTimes && state.todayTimes.length > 0) {
+      todayTimesEl.classList.add('visible');
+      todayListEl.innerHTML = '';
+      state.todayTimes.forEach((time, i) => {
+        const chip = document.createElement('span');
+        chip.className = 'today-time-chip';
+        if (i >= limit) chip.classList.add('over');
+        chip.textContent = time;
+        todayListEl.appendChild(chip);
+      });
+    } else {
+      todayTimesEl.classList.remove('visible');
+    }
   }
 
   function smoke() {
-    const s = loadState(); s.smoked++; saveState(s); render();
+    const s = loadState();
+    s.smoked++;
+    s.todayTimes.push(getNow());
+    saveState(s);
+    render();
     if (navigator.vibrate) navigator.vibrate(30);
   }
 
   function undo() {
-    const s = loadState(); if (s.smoked <= 0) return; s.smoked--; saveState(s); render();
+    const s = loadState();
+    if (s.smoked <= 0) return;
+    s.smoked--;
+    s.todayTimes.pop();
+    saveState(s);
+    render();
+  }
+
+  // ── History ──
+  function openHistory() {
+    // Also archive today's current data so it shows
+    const state = loadState();
+    const h = loadHistory();
+    const limit = getCurrentLimit(state.startDate);
+    h[state.today] = { smoked: state.smoked, limit: limit, times: state.todayTimes || [] };
+    saveHistory(h);
+
+    renderHistory();
+    document.getElementById('historyPage').classList.add('show');
+  }
+
+  function closeHistory() {
+    document.getElementById('historyPage').classList.remove('show');
+  }
+
+  function renderHistory() {
+    const h = loadHistory();
+    const scroll = document.getElementById('histScroll');
+    const dates = Object.keys(h).sort().reverse();
+
+    if (dates.length === 0) {
+      scroll.innerHTML = '<div class="hist-empty">Nessun dato ancora. Inizia a usare l\'app!</div>';
+      return;
+    }
+
+    scroll.innerHTML = '';
+    dates.forEach(date => {
+      const day = h[date];
+      const isOver = day.smoked > day.limit;
+      const isToday = date === getToday();
+
+      const div = document.createElement('div');
+      div.className = 'hist-day';
+
+      const header = document.createElement('div');
+      header.className = 'hist-day-header';
+
+      const dateEl = document.createElement('div');
+      dateEl.className = 'hist-day-date';
+      dateEl.innerHTML = `${isToday ? 'Oggi' : formatDate(date)}<span class="weekday">${getWeekday(date)}</span>`;
+
+      const badge = document.createElement('div');
+      badge.className = 'hist-day-badge ' + (isOver ? 'over' : 'ok');
+      badge.textContent = `${day.smoked}/${day.limit}`;
+
+      header.appendChild(dateEl);
+      header.appendChild(badge);
+
+      const timesDiv = document.createElement('div');
+      timesDiv.className = 'hist-day-times';
+
+      if (day.times && day.times.length > 0) {
+        day.times.forEach((time, i) => {
+          const entry = document.createElement('div');
+          entry.className = 'hist-time-entry';
+
+          const dot = document.createElement('div');
+          dot.className = 'hist-time-dot ' + (i < day.limit ? 'in-limit' : 'over');
+
+          const hour = document.createElement('div');
+          hour.className = 'hist-time-hour';
+          hour.textContent = time;
+
+          const num = document.createElement('div');
+          num.className = 'hist-time-num';
+          num.textContent = `Sigaretta ${i + 1}`;
+
+          entry.appendChild(dot);
+          entry.appendChild(hour);
+          entry.appendChild(num);
+          timesDiv.appendChild(entry);
+        });
+      } else {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'padding:10px 0; color: var(--text-dim); font-size: 13px; font-style: italic;';
+        empty.textContent = day.smoked > 0 ? 'Orari non registrati' : 'Nessuna sigaretta 🎉';
+        timesDiv.appendChild(empty);
+      }
+
+      header.addEventListener('click', () => {
+        timesDiv.classList.toggle('open');
+      });
+
+      div.appendChild(header);
+      div.appendChild(timesDiv);
+      scroll.appendChild(div);
+    });
   }
 
   function scheduleMidnightCheck() {
